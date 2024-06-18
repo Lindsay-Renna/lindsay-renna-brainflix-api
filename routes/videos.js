@@ -3,16 +3,36 @@ import fs from "fs";
 const router = express.Router();
 
 // function that will allow us to 'read' from the JSON file holding API data
-function readVideos() {
-	const videosFile = fs.readFileSync("./data/videos.json");
-	const videosData = JSON.parse(videosFile);
-	return videosData;
+
+function readVideoDetails() {
+	const videosFile = fs.readFileSync("data/videos.json");
+	const videosDetails = JSON.parse(videosFile);
+	return videosDetails;
 }
 
-router.get("/", function (req, res) {
-	const videosData = readVideos();
-	res.json(videosData);
+router.get("/", (_req, res) => {
+	const videosDetails = readVideoDetails();
+	const videoData = videosDetails.map((video) => {
+		return {
+			id: video.id,
+			title: video.title,
+			channel: video.channel,
+			image: video.image,
+		};
+	});
+	res.json(videoData);
 });
 
-// Export the router so that the app can access it from the server.js file
+router.get("/:id", (req, res) => {
+	const videoId = req.params.id;
+	const videoDetails = readVideoDetails();
+	const video = videoDetails.find((v) => v.id === videoId);
+
+	if (video) {
+		res.status(200).json(video);
+	} else {
+		res.status(404).send("No video with that id exists");
+	}
+});
+
 export default router;
