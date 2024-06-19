@@ -13,7 +13,7 @@ function readVideoDetails() {
 
 // function to write or add to our JSON file
 function addVideo(data) {
-	const stringifiedData = JSON.stringify(data);
+	const stringifiedData = JSON.stringify(data, null, 2);
 	fs.writeFileSync("data/videos.json", stringifiedData);
 }
 
