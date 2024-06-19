@@ -50,16 +50,43 @@ router.post("/", (req, res) => {
 		channel: req.body.channel,
 		image: req.body.image,
 		description: req.body.description,
-		views: "0",
-		likes: "0",
+		views: 0,
+		likes: 0,
 		duration: "5:35",
 		video: "https://unit-3-project-api-0a5620414506.herokuapp.com/stream",
-		timestamp: req.body.timestamp,
+		timestamp: Date.now(),
 		comments: [],
 	};
 	videoDetails.push(newVideo);
 	addVideo(videoDetails);
 	res.status(201).json(newVideo);
+});
+
+router.post("/:id/comments", (req, res) => {
+	const videoId = req.params.id;
+	const videoDetails = readVideoDetails();
+	const video = videoDetails.find((v) => v.id === videoId);
+
+	if (!video) {
+		res.status(404).send("Video not found");
+	}
+
+	const newComment = {
+		id: uniqid(),
+		name: req.body.name,
+		comment: req.body.comment,
+		likes: 0,
+		timestamp: Date.now(),
+	};
+
+	video.comments.push(newComment);
+
+	try {
+		fs.writeFileSync("data/videos.json", JSON.stringify(videoDetails, null, 2));
+		res.status(201).json(video.comments);
+	} catch (error) {
+		res.status(500).send("Error writing to file");
+	}
 });
 
 export default router;
