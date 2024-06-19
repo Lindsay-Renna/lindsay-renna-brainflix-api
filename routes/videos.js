@@ -89,4 +89,23 @@ router.post("/:id/comments", (req, res) => {
 	}
 });
 
+router.delete("/:videoId/comments/:commentId", (req, res) => {
+	const videoId = req.params.videoId;
+	const videoDetails = readVideoDetails();
+	const video = videoDetails.find((v) => v.id === videoId);
+
+	if (!video) {
+		res.status(404).send("Video not found");
+	}
+	const commentId = req.params.commentId;
+	video.comments = video.comments.filter((c) => c.id !== commentId);
+
+	try {
+		fs.writeFileSync("data/videos.json", JSON.stringify(videoDetails, null, 2));
+		res.status(204).json(video.comments);
+	} catch (error) {
+		res.status(500).send("Error writing to file");
+	}
+});
+
 export default router;
