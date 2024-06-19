@@ -47,7 +47,7 @@ router.post("/", (req, res) => {
 	const newVideo = {
 		id: uniqid(),
 		title: req.body.title,
-		channel: "",
+		channel: req.body.channel,
 		image: req.body.image,
 		description: req.body.description,
 		views: "0",
