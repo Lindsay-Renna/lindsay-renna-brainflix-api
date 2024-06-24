@@ -3,15 +3,12 @@ import uniqid from "uniqid";
 import fs from "fs";
 const router = express.Router();
 
-// function that will allow us to 'read' from the JSON file holding API data
-
 function readVideoDetails() {
 	const videosFile = fs.readFileSync("data/videos.json");
 	const videosDetails = JSON.parse(videosFile);
 	return videosDetails;
 }
 
-// function to write or add to our JSON file
 function addVideo(data) {
 	const stringifiedData = JSON.stringify(data, null, 2);
 	fs.writeFileSync("data/videos.json", stringifiedData);

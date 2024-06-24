@@ -19,7 +19,6 @@ app.get("/healthcheck", (_req, res) => {
 	res.send("Express is healthy!");
 });
 
-// start Express on port 8080
 app.listen(PORT, () => {
 	console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
